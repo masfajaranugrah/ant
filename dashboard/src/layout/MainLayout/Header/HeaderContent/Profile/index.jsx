@@ -25,6 +25,7 @@ import MainCard from '../../../../../components/MainCard';
 import Transitions from '../../../../../components/@extended/Transitions';
 import ProfileTab from './ProfileTab';
 import SettingTab from './SettingTab';
+import useSignOut from 'react-auth-kit/hooks/useSignOut';
 
 // assets
 import avatar1 from '../../../../../assets/images/users/avatar-1.png';
@@ -58,9 +59,11 @@ function a11yProps(index) {
 
 const Profile = () => {
   const theme = useTheme();
+  const signOut = useSignOut()
 
   const handleLogout = async () => {
-    // logout
+    signOut
+
   };
 
   const anchorRef = useRef(null);

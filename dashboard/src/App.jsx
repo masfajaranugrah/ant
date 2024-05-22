@@ -6,6 +6,7 @@ import "./app.css"
 import AuthProvider from 'react-auth-kit'
 import createStore from 'react-auth-kit/createStore';
 import { ToastContainer } from 'react-toastify';
+import ReactRouterPlugin from '@auth-kit/react-router'
 
 // ==============================|| APP - THEME, ROUTER, LOCAL  ||============================== //
 const store = createStore({
@@ -14,10 +15,11 @@ const store = createStore({
   cookieDomain: window.location.hostname,
   cookieSecure: window.location.protocol === 'http:',
   // refresh: refresh
+  debug: true
 })
 
 const App = () => (
-  <AuthProvider store={store} >
+  <AuthProvider store={store} router={ReactRouterPlugin} fallbackPath='/dashbaord/login'>
   <ThemeCustomization>
     <ScrollTop>
       <Routes />

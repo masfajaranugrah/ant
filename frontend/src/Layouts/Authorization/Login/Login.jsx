@@ -11,12 +11,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import refresh from '../../RefleshToken/refresh';
 import { Logo } from '../../../Components/Index';
 import { Footer } from '../../Index';
+import {Navigate, useLocation} from 'react-router-dom'
+
+
 
 const Login = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   
+  const location = useLocation()
+  const isAuthenticated = useIsAuthenticated()
   const signIn = useSignIn()
+
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +40,7 @@ const Login = () => {
 
   const loginHandler = async (event) => {
     event.preventDefault();
-    try {
+    // try {
       const response = await axios.post(import.meta.env.VITE_Reg, {
         email: email,
         password: password
@@ -45,7 +52,7 @@ const Login = () => {
 
       // Jika login berhasil, simpan data pengguna
       const userData = response.data; // Sesuaikan dengan struktur data respons dari server
-      console.log(userData.data._id.status)
+      console.log(userData.data)
       if (signIn({
         auth: {
           token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjo4MDA4NjA1MTk1fQ.ijw603AjpAqNwnUXmv6YB5L6m5aL-llIgBsTJo-k2r8'
@@ -60,12 +67,18 @@ const Login = () => {
         // Else, there must be some error. So, throw an error
         throw new Error("Error Occurred. Try Again");
       }
-    } catch (error) {
-      toast.warn(`${error} `);
-      console.error(error);
-    }
-  };
-
+    } 
+    console.log(isAuthenticated)
+    if (isAuthenticated) {
+      // If authenticated user, then redirect to secure dashboard
+  
+      return (
+        <Navigate to={'/'} replace/>
+      )
+    } else {
+      // If not authenticated, use the login flow
+      // For Demostration, I'm using just a button to login.
+      // In reality, there should be a form, validation, nwetowrk request and other things
   return (
     <div className="container mx-auto">
     <Logo/>
@@ -117,6 +130,6 @@ const Login = () => {
     </section>
   </div>
   );
-}
+}}
 
 export default Login;

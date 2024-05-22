@@ -127,7 +127,7 @@ const DeleteAdmin = async(req, res )=> {
     
         try {
             const user = await Administrator.findOne({email})
-            console.log(user)
+            // console.log(user)
             
             // if user doesn,t exit 
             if(!user){
@@ -149,7 +149,7 @@ const DeleteAdmin = async(req, res )=> {
                 id: user._id, role: user.role},
                 process.env.JWT_SECRET_KEY, 
                 // experied time
-                    { expiresIn : "5s" }
+                    { expiresIn : "10m" }
                 );
     
                 // set token in the browser cookies and send the response to the client

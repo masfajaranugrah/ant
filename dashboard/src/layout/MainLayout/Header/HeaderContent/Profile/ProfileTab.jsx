@@ -48,12 +48,11 @@ const ProfileTab = ({ handleLogout }) => {
       </ListItemButton>
       
       <ListItemButton selected={selectedIndex === 2} onClick={handleLogout}>
-        <Link href="/login" underline="none " className='flex'>
           <ListItemIcon>
           <LogoutOutlined />
         </ListItemIcon>
-        <ListItemText  primary="logout" className="no-underline"/>
-        </Link>
+        <ListItemText  primary="Logout"/>
+        
       </ListItemButton>
     </List>
   );

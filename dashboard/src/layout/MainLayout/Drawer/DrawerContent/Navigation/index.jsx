@@ -7,6 +7,7 @@ import axios from 'axios';
 import NavGroup from './NavGroup';
 import menuItem from '../../../../../menu-items';
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated'
 
 // ==============================|| DRAWER CONTENT - NAVIGATION ||============================== //
 const API1 = `http://localhost:5000/api/v1/administrator/`;
@@ -14,7 +15,9 @@ const API1 = `http://localhost:5000/api/v1/administrator/`;
 const Navigation = () => {
   const [adminRoles, setAdminRoles] = useState([]);
   const authuser = useAuthUser();
-
+  const auth = useIsAuthenticated();
+  console.log(adminRoles)
+  console.log(auth)
   useEffect(() => {
     const fetchAntrian = async () => {
       try {
@@ -32,8 +35,8 @@ const Navigation = () => {
 
   // Filter menu items based on the role dashboard, panggil, repangil, Cetak
   const filteredItems = menuItem.items.filter((item) => {
-    console.log(item.id)
-    if (adminRoles === 'admin') {
+ 
+    if (adminRoles === 'kasir') {
       return item.id === 'dashboard' || item.id === "cetak";
     }
     return true;

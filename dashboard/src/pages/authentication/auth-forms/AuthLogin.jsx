@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
 import { Link as RouterLink } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated'
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
 // material-ui
 import {
@@ -25,16 +27,21 @@ import {
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import axios from 'axios'
-import {useNavigate} from 'react-router-dom';
+import {Navigate, useLocation} from 'react-router-dom'
 import {toast } from 'react-toastify';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
+  const location = useLocation()
+  const isAuthenticated = useIsAuthenticated()
   const signIn = useSignIn()
-
   const [checked, setChecked] = React.useState(false);
- 
+  const navigate = useNavigate();
+
+
+
+
 
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
@@ -50,7 +57,6 @@ const AuthLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate();
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -60,9 +66,8 @@ const AuthLogin = () => {
     setPassword(e.target.value);
   };
 
-  const loginHandlerAdmin = async (e) => {
-    e.preventDefault();
-    try {
+  const loginHandlerAdmin = async (event) => {
+    event.preventDefault();
       const response = await axios.post(API, {
         email: email,
         password: password
@@ -79,23 +84,27 @@ const AuthLogin = () => {
         auth: {
           token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjo4MDA4NjA1MTk1fQ.ijw603AjpAqNwnUXmv6YB5L6m5aL-llIgBsTJo-k2r8'
         },
-        userState: { name: userData.data.name, _id: userData.data._id, email: userData.data.email},
+        userState: { name: userData.data.name, _id: userData.data._id, email: userData.data.email, role: userData.data.role},
         // refresh: refresh
-      })) {
+      }))
+      {
         // If Login Successfull, then Redirect the user to secure route
-        navigate('/dashboard');        
-        // toast.success("Hore selamat anda berhasil login");
-      } else {
+        navigate('/dashboard/admin');
+       } else {
         // Else, there must be some error. So, throw an error
-        // throw new Error("Error Occurred. Try Again");
+        throw new Error("Error Occurred. Try Again");
       }
-    } catch (error) {
-      toast.warn(`${error} `);
-      console.error(error);
-    }
-  };
+    } 
+       console.log(isAuthenticated)
+      if (isAuthenticated) {
+        // If authenticated user, then redirect to secure dashboard
+    
+        return (
+          <Navigate to={'/dashboard/admin'} replace/>
+        )
+      } else {
   return (
-    <>
+    <div>
        
           <form  onSubmit={loginHandlerAdmin} submit="post">
             <Grid container spacing={3}>
@@ -172,8 +181,8 @@ const AuthLogin = () => {
             </Grid>
           </form>
  
-    </>
+    </div>
   );
-};
+}}
 
 export default AuthLogin;
