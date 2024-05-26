@@ -69,7 +69,7 @@ export default function Register() {
 
   const handleClick =async (event) => {
     event.preventDefault();
-    await axios.post(import.meta.env.VITE_aPIRoles, {
+    await axios.post(import.meta.env.VITE_User, {
       name: name, 
       nim : nim ,
       phone_number : phone_number,

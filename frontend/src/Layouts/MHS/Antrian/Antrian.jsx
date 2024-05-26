@@ -6,24 +6,34 @@ import { Footer, Header } from "../../Index";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { Link } from "react-router-dom";
 
-const API1 = `http://localhost:5000/api/v1/user/`;
-
+ 
 const Antrian = () => {
   const [antrianList, setAntrianList] = useState([]);
   const authuser = useAuthUser();
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchAntrian = async () => {
       try {
-        const response = await axios.get(`${API1}${authuser._id}`);
+        const response = await axios.get(`${import.meta.env.VITE_User}/${authuser._id}`);
         setAntrianList(response.data.data.antrians);
       } catch (error) {
         console.error('Error fetching queue:', error);
+      }finally {
+        setLoading(false);
       }
     };
 
     fetchAntrian();
   }, [authuser._id]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <>

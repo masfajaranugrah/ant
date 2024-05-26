@@ -50,35 +50,28 @@ const Login = () => {
         }
       });
 
-      // Jika login berhasil, simpan data pengguna
-      const userData = response.data; // Sesuaikan dengan struktur data respons dari server
-      console.log(userData.data)
-      if (signIn({
+       const userData = response.data;  
+       if (signIn({
         auth: {
-          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjo4MDA4NjA1MTk1fQ.ijw603AjpAqNwnUXmv6YB5L6m5aL-llIgBsTJo-k2r8'
+          token: import.meta.env.VITE_Token
         },
-        userState: { name: userData.data.name,nim: userData.data.nim, _id: userData.data._id, email: userData.data.email, phone_number: userData.data.phone_number},
-        // refresh: refresh
+        userState: { name: userData.data.name, nim: userData.data.nim, _id: userData.data._id, email: userData.data.email, phone_number: userData.data.phone_number},
+       
       })) {
-        // If Login Successfull, then Redirect the user to secure route
+       
         navigate('/');
         toast.success("Hore selamat anda berhasil login");
       } else {
-        // Else, there must be some error. So, throw an error
+       
         throw new Error("Error Occurred. Try Again");
       }
     } 
-    console.log(isAuthenticated)
-    if (isAuthenticated) {
-      // If authenticated user, then redirect to secure dashboard
-  
+     if (isAuthenticated) {
+      
       return (
         <Navigate to={'/'} replace/>
       )
     } else {
-      // If not authenticated, use the login flow
-      // For Demostration, I'm using just a button to login.
-      // In reality, there should be a form, validation, nwetowrk request and other things
   return (
     <div className="container mx-auto">
     <Logo/>

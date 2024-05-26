@@ -9,19 +9,19 @@ const icons = {
 
 // ==============================|| MENU ITEMS - SAMPLE PAGE & DOCUMENTATION ||============================== //
 
-const repangil = {
-  id: 'repanggilan',
-  title: 'Support',
+const repanggilKasil = {
+  id: 'repanggilKasir',
+  title: 'repanggilKasil',
   type: 'group',
   children: [
     {
-      id: 'repanggilan',
+      id: 'repanggilKasir',
       title: 'has been called',
       type: 'item',
-      url: '/dashboard/repanggilan',
+      url: '/dashboard/repanggilankasir',
       icon: icons.ChromeOutlined
     },
   ]
 };
 
-export default repangil;
+export default repanggilKasil;

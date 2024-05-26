@@ -12,14 +12,24 @@ const DashboardDefault = Loadable(
   lazy(() => import('../pages/dashboard'))
 );
 
-// render - pages panggilan
+// render - pages panggilan informasi
 const PanggilPage = Loadable(
   lazy(() => import('../pages/panggil/panggilPage'))
 );
 
-//render - repanggilan
+//render - repanggilan informasi
 const RepanggilPage = Loadable(
   lazy(() => import('../pages/repangillan/Repanggilan'))
+);
+
+// render - pages panggilan kasir
+const PanggilPageKasir = Loadable(
+  lazy(() => import('../pages/panggil_kasir/panggilPageKasir'))
+);
+
+//render - repanggilan kasir
+const RepanggilPageKasir = Loadable(
+  lazy(() => import('../pages/repanggil_kasir/RepanggilanKasir'))
 );
 
 // render - pages cetak
@@ -51,6 +61,7 @@ const MainRoutes = {
             </RequireAuth>
           )
         },
+        // informasi 
         {
           path: 'panggilan',
           element: (
@@ -64,6 +75,23 @@ const MainRoutes = {
           element: (
             <RequireAuth fallbackPath="/dashboard/login">
               <RepanggilPage />
+            </RequireAuth>
+          )
+        },
+        // kasir 
+        {
+          path: 'panggilankasir',
+          element: (
+            <RequireAuth fallbackPath="/dashboard/login">
+              <PanggilPageKasir />
+            </RequireAuth>
+          )
+        },
+        {
+          path: 'repanggilankasir',
+          element: (
+            <RequireAuth fallbackPath="/dashboard/login">
+              <RepanggilPageKasir />
             </RequireAuth>
           )
         },

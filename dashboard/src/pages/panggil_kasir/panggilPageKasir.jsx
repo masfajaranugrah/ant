@@ -3,16 +3,16 @@ import { Typography } from '@mui/material';
 
 // project import
 import MainCard from '../../components/MainCard';
-import OrdersTableInformasi from './OrdersTableInformasi';
+import OrdersTablekasir from './OrdersTablekasir';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const RePangilanPage = () => (
+const panggilPageKasir = () => (
   <MainCard>
     <Typography variant="body2">
-     <OrdersTableInformasi/>
+     <OrdersTablekasir/>
     </Typography>
   </MainCard>
 );
 
-export default RePangilanPage;
+export default panggilPageKasir;

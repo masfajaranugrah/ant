@@ -77,7 +77,7 @@ const AuthRegister = () => {
 
   const handleSubmit =async (e) => {
     e.preventDefault();
-    await axios.post(API, {
+    await axios.post(import.meta.env.VITE_Register, {
       name: name, 
        email : email,
        password : password

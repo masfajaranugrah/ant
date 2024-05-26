@@ -3,14 +3,14 @@ import { Typography } from '@mui/material';
 
 // project import
 import MainCard from '../../components/MainCard';
-import OrdersTable from './OrdersTable';
+import OrdersTableInformasi from './OrdersTableInformasi';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const panggilPage = () => (
   <MainCard>
     <Typography variant="body2">
-     <OrdersTable/>
+     <OrdersTableInformasi/>
     </Typography>
   </MainCard>
 );

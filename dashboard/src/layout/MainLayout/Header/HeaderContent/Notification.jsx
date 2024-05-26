@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -25,7 +25,8 @@ import MainCard from '../../../../components/MainCard';
 import Transitions from '../../../../components/@extended/Transitions';
 
 // assets
-import { BellOutlined, CloseOutlined, GiftOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons';
+import { BellOutlined, CloseOutlined, MessageOutlined } from '@ant-design/icons';
+import axios from '../../../../../node_modules/axios/index';
 
 // sx styles
 const avatarSX = {
@@ -40,7 +41,6 @@ const actionSX = {
   top: 'auto',
   right: 'auto',
   alignSelf: 'flex-start',
-
   transform: 'none'
 };
 
@@ -49,11 +49,17 @@ const actionSX = {
 const Notification = () => {
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
-
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [newNotificationCount, setNewNotificationCount] = useState(0);
+  const [readNotifications, setReadNotifications] = useState(new Set());
+
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
+    if (!open) {
+      setNewNotificationCount(0); // Reset new notification count when popper is opened
+    }
   };
 
   const handleClose = (event) => {
@@ -63,8 +69,42 @@ const Notification = () => {
     setOpen(false);
   };
 
+  const handleNotificationClick = (id) => {
+    if (!readNotifications.has(id)) {
+      setReadNotifications((prevReadNotifications) => {
+        const newReadNotifications = new Set(prevReadNotifications);
+        newReadNotifications.add(id);
+        return newReadNotifications;
+      });
+      setNewNotificationCount((prevCount) => Math.max(prevCount - 1, 0));
+    }
+  };
+
   const iconBackColorOpen = 'grey.300';
   const iconBackColor = 'grey.100';
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(import.meta.env.VITE_Antrian);
+        const newData = response.data.data;
+        setNotifications(newData);
+        setNewNotificationCount(newData.length);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const formatDate = (dateString) => {
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+    };
+    return new Date(dateString).toLocaleString(undefined, options);
+  };
 
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75 }}>
@@ -78,7 +118,7 @@ const Notification = () => {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <Badge badgeContent={4} color="primary">
+        <Badge badgeContent={newNotificationCount} color="primary">
           <BellOutlined />
         </Badge>
       </IconButton>
@@ -136,126 +176,38 @@ const Notification = () => {
                       }
                     }}
                   >
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            color: 'success.main',
-                            bgcolor: 'success.lighter'
-                          }}
-                        >
-                          <GiftOutlined />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            It&apos;s{' '}
-                            <Typography component="span" variant="subtitle1">
-                              Cristina danny&apos;s
-                            </Typography>{' '}
-                            birthday today.
-                          </Typography>
-                        }
-                        secondary="2 min ago"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          3:00 AM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-                    <Divider />
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            color: 'primary.main',
-                            bgcolor: 'primary.lighter'
-                          }}
-                        >
-                          <MessageOutlined />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            <Typography component="span" variant="subtitle1">
-                              Aida Burg
-                            </Typography>{' '}
-                            commented your post.
-                          </Typography>
-                        }
-                        secondary="5 August"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          6:00 PM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-                    <Divider />
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            color: 'error.main',
-                            bgcolor: 'error.lighter'
-                          }}
-                        >
-                          <SettingOutlined />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            Your Profile is Complete &nbsp;
-                            <Typography component="span" variant="subtitle1">
-                              60%
-                            </Typography>{' '}
-                          </Typography>
-                        }
-                        secondary="7 hours ago"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          2:45 PM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-                    <Divider />
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            color: 'primary.main',
-                            bgcolor: 'primary.lighter'
-                          }}
-                        >
-                          C
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            <Typography component="span" variant="subtitle1">
-                              Cristina Danny
-                            </Typography>{' '}
-                            invited to join{' '}
-                            <Typography component="span" variant="subtitle1">
-                              Meeting.
+                    {notifications.map((data) => (
+                      <div key={data._id}>
+                        <ListItemButton onClick={() => handleNotificationClick(data._id)} sx={{ bgcolor: readNotifications.has(data._id) ? 'grey.100' : 'white' }}>
+                          <ListItemAvatar>
+                            <Avatar
+                              sx={{
+                                color: 'primary.main',
+                                bgcolor: 'primary.lighter'
+                              }}
+                            >
+                              <MessageOutlined />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6">
+                                <Typography component="span" variant="subtitle1">
+                                  {data.user?.name}
+                                </Typography>{' '}
+                                telah mengambil antrian {data.nomer_antrian}
+                              </Typography>
+                            }
+                          />
+                          <ListItemSecondaryAction>
+                            <Typography variant="caption" noWrap>
+                              {formatDate(data.createdAt)}
                             </Typography>
-                          </Typography>
-                        }
-                        secondary="Daily scrum meeting time"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          9:10 PM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-                    <Divider />
+                          </ListItemSecondaryAction>
+                        </ListItemButton>
+                        <Divider />
+                      </div>
+                    ))}
                     <ListItemButton sx={{ textAlign: 'center', py: `${12}px !important` }}>
                       <ListItemText
                         primary={

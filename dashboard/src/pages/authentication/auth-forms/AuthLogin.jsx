@@ -23,7 +23,6 @@ import {
  
 // project import
  import AnimateButton from '../../../components/@extended/AnimateButton';
- const API = "http://localhost:5000/api/v1/administrator/login";
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import axios from 'axios'
@@ -68,7 +67,7 @@ const AuthLogin = () => {
 
   const loginHandlerAdmin = async (event) => {
     event.preventDefault();
-      const response = await axios.post(API, {
+      const response = await axios.post(import.meta.env.VITE_Login, {
         email: email,
         password: password
       }, {
@@ -77,12 +76,10 @@ const AuthLogin = () => {
         }
       });
 
-      // Jika login berhasil, simpan data pengguna
-      const userData = response.data; // Sesuaikan dengan struktur data respons dari server
-      console.log(userData.data)
-      if (signIn({
+       const userData = response.data;  
+       if (signIn({
         auth: {
-          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjo4MDA4NjA1MTk1fQ.ijw603AjpAqNwnUXmv6YB5L6m5aL-llIgBsTJo-k2r8'
+          token : import.meta.env.VITE_Token
         },
         userState: { name: userData.data.name, _id: userData.data._id, email: userData.data.email, role: userData.data.role},
         // refresh: refresh
@@ -95,8 +92,7 @@ const AuthLogin = () => {
         throw new Error("Error Occurred. Try Again");
       }
     } 
-       console.log(isAuthenticated)
-      if (isAuthenticated) {
+       if (isAuthenticated) {
         // If authenticated user, then redirect to secure dashboard
     
         return (

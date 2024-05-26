@@ -10,7 +10,7 @@ const icons = {
 // ==============================|| MENU ITEMS - SAMPLE PAGE & DOCUMENTATION ||============================== //
 
 const panggil = {
-  id: 'pangil',
+  id: 'panggilan',
   title: 'Support',
   type: 'group',
   children: [

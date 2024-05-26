@@ -10,12 +10,12 @@ import AuthFooter from '../../components/cards/AuthFooter';
 import axios from 'axios'
 import { useEffect, useState } from 'react';
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
-const urlApi = "http://localhost:5000/api/v1/antrian";
+
 
 const DashboardDefault = () => {
   const [getData, setGetData] = useState([]);
   useEffect(() => {
-    axios.get(urlApi)
+    axios.get(import.meta.env.VITE_Admin)
     .then((res) => {
       setGetData(res.data.data)
     })

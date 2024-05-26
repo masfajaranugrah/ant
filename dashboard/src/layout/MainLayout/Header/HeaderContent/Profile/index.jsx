@@ -18,21 +18,19 @@ import {
   Tabs,
   Typography
 } from '@mui/material';
-const API1 = `http://localhost:5000/api/v1/administrator/`;
 
 // project import
 import MainCard from '../../../../../components/MainCard';
 import Transitions from '../../../../../components/@extended/Transitions';
 import ProfileTab from './ProfileTab';
-import SettingTab from './SettingTab';
-import useSignOut from 'react-auth-kit/hooks/useSignOut';
 
 // assets
 import avatar1 from '../../../../../assets/images/users/avatar-1.png';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import axios from 'axios'
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-
+import useSignOut from 'react-auth-kit/hooks/useSignOut'
+import {useNavigate} from 'react-router-dom';
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
   return (
@@ -60,10 +58,10 @@ function a11yProps(index) {
 const Profile = () => {
   const theme = useTheme();
   const signOut = useSignOut()
-
+  const navigate = useNavigate()
   const handleLogout = async () => {
-    signOut
-
+    signOut()
+    navigate('/dashboard/login')
   };
 
   const anchorRef = useRef(null);
@@ -91,11 +89,11 @@ const Profile = () => {
 
   const [antrianList, setAntrianList] = useState([]);
   const authuser = useAuthUser();
-
+console.log(import.meta.env.VITE_Admin)
   useEffect(() => {
     const fetchAntrian = async () => {
       try {
-        const response = await axios.get(`${API1}${authuser._id}`);
+        const response = await axios.get(`${import.meta.env.VITE_Admin}${authuser._id}`);
         setAntrianList(response.data.data);
       } catch (error) {
         console.error('Error fetching queue:', error);
@@ -195,27 +193,13 @@ const Profile = () => {
                               label="Profile"
                               {...a11yProps(0)}
                             />
-                            <Tab
-                              sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                textTransform: 'capitalize'
-                              }}
-                              icon={<SettingOutlined style={{ marginBottom: 0, marginRight: '10px' }} />}
-                              label="Setting"
-                              {...a11yProps(1)}
-                            />
+                           
                           </Tabs>
                         </Box>
                         <TabPanel value={value} index={0} dir={theme.direction}>
                           <ProfileTab handleLogout={handleLogout} />
                         </TabPanel>
-                    
-                        <TabPanel value={value} index={1} dir={theme.direction}>
-                          <SettingTab />
-                        </TabPanel>
+                  
                       </>
                     )}
                   </MainCard>

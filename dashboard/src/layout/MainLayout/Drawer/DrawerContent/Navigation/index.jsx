@@ -13,11 +13,10 @@ import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated'
 const API1 = `http://localhost:5000/api/v1/administrator/`;
 
 const Navigation = () => {
-  const [adminRoles, setAdminRoles] = useState([]);
+  const [adminRoles, setAdminRoles] = useState(null);
   const authuser = useAuthUser();
   const auth = useIsAuthenticated();
-  console.log(adminRoles)
-  console.log(auth)
+ 
   useEffect(() => {
     const fetchAntrian = async () => {
       try {
@@ -31,17 +30,23 @@ const Navigation = () => {
     if (authuser && authuser._id) {
       fetchAntrian();
     }
-  }, [adminRoles]);
+  }, []);
 
-  // Filter menu items based on the role dashboard, panggil, repangil, Cetak
+  if (adminRoles === null) {
+    return null; // or a loading spinner
+  }
+
+  // Filter menu items based on the role
   const filteredItems = menuItem.items.filter((item) => {
- 
-    if (adminRoles === 'kasir') {
-      return item.id === 'dashboard' || item.id === "cetak";
+     if (adminRoles === 'kasir') {
+      return item.id === 'dashboard' || item.id === 'panggilKasir' || item.id === 'repanggilKasir' | item.id === 'cetak';
+    } 
+    if (adminRoles === 'informasi') {
+      return item.id === 'dashboard' || item.id === 'panggilan' || item.id === 'repanggilan' || item.id === 'cetak';
     }
     return true;
-   
   });
+
   const navGroups = filteredItems.map((item) => {
     switch (item.type) {
       case 'group':
@@ -59,7 +64,7 @@ const Navigation = () => {
 };
 
 Navigation.propTypes = {
-  role: PropTypes.string.isRequired,
+  role: PropTypes.string,
 };
 
 export default Navigation;
