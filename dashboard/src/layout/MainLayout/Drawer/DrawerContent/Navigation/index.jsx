@@ -10,7 +10,6 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated'
 
 // ==============================|| DRAWER CONTENT - NAVIGATION ||============================== //
-const API1 = `http://localhost:5000/api/v1/administrator/`;
 
 const Navigation = () => {
   const [adminRoles, setAdminRoles] = useState(null);
@@ -20,7 +19,7 @@ const Navigation = () => {
   useEffect(() => {
     const fetchAntrian = async () => {
       try {
-        const response = await axios.get(`${API1}${authuser._id}`);
+        const response = await axios.get(`${import.meta.env.VITE_Admin}${authuser._id}`);
         setAdminRoles(response.data.data.role);
       } catch (error) {
         console.error('Error fetching queue:', error);
@@ -42,7 +41,7 @@ const Navigation = () => {
       return item.id === 'dashboard' || item.id === 'panggilKasir' || item.id === 'repanggilKasir' | item.id === 'cetak';
     } 
     if (adminRoles === 'informasi') {
-      return item.id === 'dashboard' || item.id === 'panggilan' || item.id === 'repanggilan' || item.id === 'cetak';
+      return item.id === 'dashboard_informasi' || item.id === 'panggilan' || item.id === 'repanggilan' || item.id === 'cetak';
     }
     return true;
   });

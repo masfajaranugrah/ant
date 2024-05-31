@@ -16,7 +16,7 @@ const repangil = {
   children: [
     {
       id: 'repanggilan',
-      title: 'has been called',
+      title: 'Data antrian Selesai',
       type: 'item',
       url: '/dashboard/repanggilan',
       icon: icons.ChromeOutlined

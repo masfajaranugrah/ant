@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 
 
-const DashboardDefault = () => {
+const Dashboard_informasi = () => {
   const [getData, setGetData] = useState([]);
   useEffect(() => {
     axios.get(import.meta.env.VITE_Antrian)
@@ -83,4 +83,4 @@ const sisa = () => {
   );
 };
 
-export default DashboardDefault;
+export default Dashboard_informasi;

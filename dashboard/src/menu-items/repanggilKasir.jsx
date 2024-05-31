@@ -16,7 +16,7 @@ const repanggilKasil = {
   children: [
     {
       id: 'repanggilKasir',
-      title: 'has been called',
+      title: 'Data antrian Selesai',
       type: 'item',
       url: '/dashboard/repanggilankasir',
       icon: icons.ChromeOutlined

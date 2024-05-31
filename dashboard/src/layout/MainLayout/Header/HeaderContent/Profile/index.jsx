@@ -89,7 +89,7 @@ const Profile = () => {
 
   const [antrianList, setAntrianList] = useState([]);
   const authuser = useAuthUser();
-console.log(import.meta.env.VITE_Admin)
+
   useEffect(() => {
     const fetchAntrian = async () => {
       try {
