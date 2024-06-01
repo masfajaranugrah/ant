@@ -4,8 +4,8 @@ import { Table, TableHead, TableBody, TableRow, TableCell, Button } from '@mui/m
 
 const OrdersTableInformasi = () => {
   const [getData, setGetData] = useState([]);
-  const [disabledButtons, setDisabledButtons] = useState([]); // State untuk menangani tombol-tombol yang telah dinonaktifkan
-  const [calledIds, setCalledIds] = useState([]); // State untuk melacak ID yang sudah dipanggil
+  const [disabledButtons, setDisabledButtons] = useState([]);  
+  const [calledIds, setCalledIds] = useState([]);  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,38 +35,28 @@ const OrdersTableInformasi = () => {
     }
   };
 
-  // Fungsi untuk menangani ketika tombol "Panggil" diklik
-  const handleCall = (_id, antrian, nama) => {
-    // Mengirim permintaan suara
-    handleCallButtonClick(antrian, nama);
+   const handleCall = (_id, antrian, nama) => {
+     handleCallButtonClick(antrian, nama);
 
-    // Menambahkan ID ke dalam daftar tombol yang telah dinonaktifkan
-    setDisabledButtons([...disabledButtons, _id]);
-    // Menambahkan ID ke dalam daftar ID yang sudah dipanggil
-    setCalledIds([...calledIds, _id]);
+     setDisabledButtons([...disabledButtons, _id]);
+     setCalledIds([...calledIds, _id]);
   };
 
-  // Fungsi untuk menangani ketika tombol "Selesai" diklik
-  const finish = async (_id, event) => {
+   const finish = async (_id, event) => {
     event.preventDefault();
     await updateStatus(_id, 'tidak aktif');
-    // Memuat ulang halaman setelah pemanggilan fungsi selesai
-    location.reload();
+     location.reload();
   };
 
-  // Fungsi untuk menangani ketika tombol "Panggil Ulang" diklik
-  const handleRecall = (_id, antrian, nama) => {
-    // Mengirim permintaan suara
-    rehandleCallButtonClick(antrian, nama);
-    // Menghapus ID dari daftar ID yang sudah dipanggil
-    setCalledIds(calledIds.filter(calledId => calledId !== _id));
+   const handleRecall = (_id, antrian, nama) => {
+     rehandleCallButtonClick(antrian, nama);
+     setCalledIds(calledIds.filter(calledId => calledId !== _id));
   };
 
-  // Fungsi untuk menangani pemutaran suara
-  const handleCallButtonClick = (antrian, nama) => {
+   const handleCallButtonClick = (antrian, nama) => {
     try {
       if (responsiveVoice && responsiveVoice.speak) {
-        responsiveVoice.speak(`Panggilan untuk antrian ${antrian}, atas nama ${nama}, segera datang ke sumber suara`, "Indonesian Male", {
+        responsiveVoice.speak(`Panggilan untuk antrian ${antrian}, segera datang ke loket infromasi`, "Indonesian Male", {
           pitch: 1,
           rate: 1,
         });
@@ -81,7 +71,7 @@ const OrdersTableInformasi = () => {
   const rehandleCallButtonClick = (antrian, nama) => {
     try {
       if (responsiveVoice && responsiveVoice.speak) {
-        responsiveVoice.speak(`Panggilan ulang untuk antrian ${antrian}, atas nama ${nama}, segera datang ke sumber suara`, "Indonesian Male", {
+        responsiveVoice.speak(`Panggilan ulang untuk antrian ${antrian}, segera datang ke loket infromasi`, "Indonesian Male", {
           pitch: 1,
           rate: 1,
         });

@@ -79,7 +79,7 @@ const AntrianInformasi = () => {
                 <ModalHeader className="flex flex-col gap-1">notif</ModalHeader>
                 <ModalBody>
                   <p>
-                    Apakah kamu ingin mengambil antrian
+                    Apakah kamu ingin mengambil antrian Informasi
                   </p>
                 </ModalBody>
                 <ModalFooter>

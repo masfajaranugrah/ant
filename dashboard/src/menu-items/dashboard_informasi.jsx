@@ -17,7 +17,7 @@ const dashboard_informasi = {
       id: 'dashboard_informasi',
       title: 'dashboard_informasi',
       type: 'item',
-      url: '/dashboard/admin',
+      url: '/dashboard/informasi',
       icon: icons.DashboardOutlined,
       breadcrumbs: false
     }

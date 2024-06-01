@@ -2,7 +2,8 @@ import React from "react";
 import { Antrian, HomeMHS, Login, Register, Profile, HelpDesk, Footer  } from "../Layouts/Index.jsx";
 import {Route, Routes } from "react-router-dom";
 import RequireAuth from '@auth-kit/react-router/RequireAuth'
-
+import Li from '../login.jsx'
+import Cal from '../Callback.jsx'
 const RoutersHome = () => {
     return (
             <Routes>
@@ -21,6 +22,8 @@ const RoutersHome = () => {
         }/>
         <Route path={'/profile'} element={<Profile/>}></Route>
         <Route path={'/help'} element={<HelpDesk/>}></Route>
+        <Route path={'/l'} element={<Li/>}></Route>
+        <Route path={'/c'} element={<Cal/>}></Route>
             </Routes>
             
     );

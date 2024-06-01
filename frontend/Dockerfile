@@ -1,26 +1,32 @@
+# Use the official Node.js image as the base image for the build stage
+FROM node:20 AS build
 
-#stage 1
-
-FROM node:alpine3.18 as build
-
-ARG REACT_APP_SERVICES_HOST=/services/m
-
+# Set the working directory inside the container
 WORKDIR /app
 
-COPY ./package.json /app/package.json
-COPY ./package-lock.json /app/package-lock.json
+# Copy package.json and package-lock.json to the working directory
+COPY package.json package-lock.json ./
 
+# Install dependencies
 RUN npm install
 
+# Copy the rest of the application code to the working directory
 COPY . .
 
-RUN npm run dev
+# Build the React application for production
+RUN npm run build
 
+# Use the official Nginx image as the base image for the production stage
+FROM nginx:stable-alpine
 
-# stage 2
-
-FROM nginx:1.23-alpine
-
+# Copy the custom Nginx configuration file
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
+# Copy the build output from the build stage to the Nginx html directory
 COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose the port that the application will run on
+EXPOSE 80
+
+# Run Nginx
+CMD ["nginx", "-g", "daemon off;"]

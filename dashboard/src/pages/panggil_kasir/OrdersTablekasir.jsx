@@ -66,7 +66,7 @@ const OrdersTablekasir = () => {
   const handleCallButtonClick = (antrian, nama) => {
     try {
       if (responsiveVoice && responsiveVoice.speak) {
-        responsiveVoice.speak(`Panggilan untuk antrian ${antrian}, atas nama ${nama}, segera datang ke sumber suara`, "Indonesian Male", {
+        responsiveVoice.speak(`Panggilan untuk antrian ${antrian}, segera datang ke Loket Kasir`, "Indonesian Male", {
           pitch: 1,
           rate: 1,
         });
@@ -81,7 +81,7 @@ const OrdersTablekasir = () => {
   const rehandleCallButtonClick = (antrian, nama) => {
     try {
       if (responsiveVoice && responsiveVoice.speak) {
-        responsiveVoice.speak(`Panggilan ulang untuk antrian ${antrian}, atas nama ${nama}, segera datang ke sumber suara`, "Indonesian Male", {
+        responsiveVoice.speak(`Panggilan ulang untuk antrian ${antrian},  segera datang ke Loket Kasir`, "Indonesian Male", {
           pitch: 1,
           rate: 1,
         });
@@ -129,7 +129,6 @@ const OrdersTablekasir = () => {
                   variant="contained"
                   color="secondary"
                   onClick={() => handleRecall(data._id, data.nomer_antrian, data.user.name)}
-                  disabled={!calledIds.includes(data._id)}
                 >
                   Panggil Ulang
                 </Button>

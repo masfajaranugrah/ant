@@ -12,9 +12,9 @@ const DashboardDefault = Loadable(
   lazy(() => import('../pages/dashboard'))
 );
 
-const Dashboard_informasi = Loadable(
-  lazy(() => import('../pages/dashboard_informasi'))
-);
+// const Dashboard_informasi = Loadable(
+//   lazy(() => import('../pages/dashboard_informasi/index'))
+// );
 
 // render - pages panggilan informasi
 const PanggilPage = Loadable(
@@ -65,14 +65,7 @@ const MainRoutes = {
             </RequireAuth>
           )
         },
-        {
-          path: 'admin',
-          element: (
-            <RequireAuth fallbackPath="/dashboard/login">
-              <Dashboard_informasi />
-            </RequireAuth>
-          )
-        },
+       
         // informasi 
         {
           path: 'panggilan',

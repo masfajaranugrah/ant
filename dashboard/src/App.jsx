@@ -7,7 +7,7 @@ import AuthProvider from 'react-auth-kit'
 import createStore from 'react-auth-kit/createStore';
 import { ToastContainer } from 'react-toastify';
 import ReactRouterPlugin from '@auth-kit/react-router'
-
+ 
 // ==============================|| APP - THEME, ROUTER, LOCAL  ||============================== //
 const store = createStore({
   authName:'_auth',
@@ -22,8 +22,9 @@ const App = () => (
   <AuthProvider store={store} router={ReactRouterPlugin} fallbackPath='/dashbaord/login'>
   <ThemeCustomization>
     <ScrollTop>
+ 
       <Routes />
-    </ScrollTop>
+     </ScrollTop>
   </ThemeCustomization>
   <ToastContainer style={{ width: "300px", margin: "0 70px", top: "10px" }}/>
   </AuthProvider>

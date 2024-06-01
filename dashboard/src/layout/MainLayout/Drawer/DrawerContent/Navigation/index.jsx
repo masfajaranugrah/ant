@@ -41,7 +41,7 @@ const Navigation = () => {
       return item.id === 'dashboard' || item.id === 'panggilKasir' || item.id === 'repanggilKasir' | item.id === 'cetak';
     } 
     if (adminRoles === 'informasi') {
-      return item.id === 'dashboard_informasi' || item.id === 'panggilan' || item.id === 'repanggilan' || item.id === 'cetak';
+      return item.id === 'dashboard' || item.id === 'panggilan' || item.id === 'repanggilan' || item.id === 'cetak';
     }
     return true;
   });

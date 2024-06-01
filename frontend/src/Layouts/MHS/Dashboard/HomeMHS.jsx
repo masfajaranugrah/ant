@@ -50,9 +50,14 @@ const HomeMHS = () => {
           ) : (
             <div>
      
-              <div className="flex justify-center gap-4 md:flex-wrap sm:flex-col xl:flex-wrap lg:flex-wrap items-center text-5xl font-bold pt-20 relative">
-                <AntrianInformasi/>
-                <AntrianLoket/>
+              <div>
+                <div>
+                     <AntrianInformasi/>
+                </div>
+             <div className="mt-[20px]">
+                  <AntrianLoket/>
+             </div>
+            
               </div>
             </div>
           )}

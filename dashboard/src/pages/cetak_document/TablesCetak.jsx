@@ -1,122 +1,120 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Table, TableHead, TableBody, TableRow, TableCell, Button } from '@mui/material/';
+import React, { useCallback, useMemo, useRef, useState, useEffect, StrictMode } from "react";
+import axios from 'axios';
+import { AgGridReact } from "@ag-grid-community/react";
+import "@ag-grid-community/styles/ag-grid.css";
+import "@ag-grid-community/styles/ag-theme-quartz.css";
+import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
+import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
+import { ModuleRegistry } from "@ag-grid-community/core";
+ModuleRegistry.registerModules([
+  ClientSideRowModelModule,
+  ExcelExportModule
+]);
 
 const TablesCetak = () => {
-  const [getData, setGetData] = useState([]);
-  const [disabledButtons, setDisabledButtons] = useState([]); // State untuk menangani tombol-tombol yang telah dinonaktifkan
-  const [calledIds, setCalledIds] = useState([]); // State untuk melacak ID yang sudah dipanggil
+  const gridRef = useRef();
+  const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
+  const gridStyle = useMemo(() => ({ height: "500px", width: "100%" }), []);
+  const [rowData, setRowData] = useState([]);
+  const [columnDefs] = useState([
+    { field: "id" },
+    { field: "nim" },
+    { field: "nama" },
+    { field: "email" },
+    { field: "nomer telp" },
+    { field: "nomer Antrian" },
+    { field: "status" }
+  ]);
+  const defaultColDef = useMemo(() => ({
+    filter: true,
+    minWidth: 100,
+    flex: 1
+  }), []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(import.meta.env.VITE_Antrian);
-        setGetData(response.data.data);
+        const customHeadings = response.data.data.map(item => ({
+          "id": item._id,
+          "nim": item.user?.nim,
+          "nama": item.user?.name,
+          "email": item.user?.email,
+          "nomer telp": item.user?.phone_number,
+          "nomer Antrian": item.nomer_antrian,
+          "status": item.status,
+        }));
+        setRowData(customHeadings);
       } catch (error) {
-        console.log(error);
+        console.error("There was an error fetching the data!", error);
       }
     };
 
     fetchData();
   }, []);
 
-  const updateStatus = async (_id, status) => {
-    try {
-      const response = await axios.patch(`${import.meta.env.VITE_Antrian}/${_id}`, { status });
-
-      if (response.status !== 200) {
-        throw new Error('Failed to update status');
+  const onBtExport = useCallback(() => {
+    const names = {};
+    gridRef.current.api.forEachNode(node => {
+      if (!names[node.data.nama]) {
+        names[node.data.nama] = true;
       }
-
-      const data = response.data;
-      console.log(data); // Menampilkan respons dari backend
-    } catch (error) {
-      console.error('Error updating status:', error.message);
-    }
-  };
-
-  // Fungsi untuk menangani ketika tombol "Panggil" diklik
-  const handleCall = (_id, antrian, nama) => {
-    // Mengirim permintaan suara
-    handleCallButtonClick(antrian, nama);
-
-    // Menambahkan ID ke dalam daftar tombol yang telah dinonaktifkan
-    setDisabledButtons([...disabledButtons, _id]);
-    // Menambahkan ID ke dalam daftar ID yang sudah dipanggil
-    setCalledIds([...calledIds, _id]);
-  };
-
-  // Fungsi untuk menangani ketika tombol "Selesai" diklik
-  const finish = async (_id, event) => {
-    event.preventDefault();
-    await updateStatus(_id, 'tidak aktif');
-    // Memuat ulang halaman setelah pemanggilan fungsi selesai
-    location.reload();
-  };
-
-  // Fungsi untuk menangani ketika tombol "Panggil Ulang" diklik
-  const handleRecall = (_id, antrian, nama) => {
-    // Mengirim permintaan suara
-    rehandleCallButtonClick(antrian, nama);
-    // Menghapus ID dari daftar ID yang sudah dipanggil
-    setCalledIds(calledIds.filter(calledId => calledId !== _id));
-  };
-
-  // Fungsi untuk menangani pemutaran suara
-  const handleCallButtonClick = (antrian, nama) => {
-    try {
-      if (responsiveVoice && responsiveVoice.speak) {
-        responsiveVoice.speak(`Panggilan untuk antrian ${antrian}, atas nama ${nama}, segera datang ke sumber suara`, "Indonesian Male", {
-          pitch: 1,
-          rate: 1,
+    });
+    const performExport = async () => {
+      let spreadsheets = [];
+      for (const name in names) {
+        await gridRef.current.api.setColumnFilterModel("nama", {
+          values: [name]
         });
-      } else {
-        throw new Error('Pustaka tidak tersedia atau suara tidak dapat diputar.');
-      }
-    } catch (error) {
-      console.error('Terjadi kesalahan saat memainkan suara:', error.message);
-    }
-  };
-
-  const rehandleCallButtonClick = (antrian, nama) => {
-    try {
-      if (responsiveVoice && responsiveVoice.speak) {
-        responsiveVoice.speak(`Panggilan ulang untuk antrian ${antrian}, atas nama ${nama}, segera datang ke sumber suara`, "Indonesian Male", {
-          pitch: 1,
-          rate: 1,
+        gridRef.current.api.onFilterChanged();
+        if (!gridRef.current.api.isAnyFilterPresent()) {
+          throw new Error("Filter not applied");
+        }
+        const sheet = gridRef.current.api.getSheetDataForExcel({
+          sheetName: name
         });
-      } else {
-        throw new Error('Pustaka tidak tersedia atau suara tidak dapat diputar.');
+        if (sheet) {
+          spreadsheets.push(sheet);
+        }
       }
-    } catch (error) {
-      console.error('Terjadi kesalahan saat memainkan suara:', error.message);
-    }
-  };
+      await gridRef.current.api.setColumnFilterModel("nama", null);
+      gridRef.current.api.onFilterChanged();
+      gridRef.current.api.exportMultipleSheetsAsExcel({
+        data: spreadsheets,
+        fileName: "data_antrian.xlsx"
+      });
+    };
+    performExport();
+  }, []);
 
   return (
-    <div>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>NIM</TableCell>
-            <TableCell>Nama</TableCell>
-            <TableCell>Nomor Antrian</TableCell>
-            <TableCell>Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {getData.filter(data => data.status === 'aktif' && data.nomer_antrian?.startsWith('K')).map((data) => (
-            <TableRow key={data._id}>
-              <TableCell>{data.user?.nim}</TableCell>
-              <TableCell>{data.user?.name}</TableCell>
-              <TableCell>{data.nomer_antrian}</TableCell>
-              <TableCell>{data.status}</TableCell>
-  
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <StrictMode>
+      <div style={containerStyle}>
+        <div className="container">
+          <div>
+            <button
+              onClick={onBtExport}
+              style={{ marginBottom: "5px", fontWeight: "bold" }}
+            >
+              Export to Excel
+            </button>
+          </div>
+          <div className="grid-wrapper">
+            <div
+              style={gridStyle}
+              className={"ag-theme-quartz-dark"}
+            >
+              <AgGridReact
+                ref={gridRef}
+                rowData={rowData}
+                columnDefs={columnDefs}
+                defaultColDef={defaultColDef}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </StrictMode>
   );
 };
 
