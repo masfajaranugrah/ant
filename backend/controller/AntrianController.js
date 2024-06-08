@@ -93,10 +93,35 @@ const updateAntrian = async (req, res) => {
     }
 };
 
+const deleteAntrian = async (req, res) => {
+    try {
+        // Pastikan ID valid sebelum mencari antrian
+        const _id = req.params._id;
+        // if (!id) {
+        //     return res.status(400).json({ message: 'Invalid ID' });
+        // }
 
-module.exports ={
+        // // Cari antrian berdasarkan ID
+        const antrian = await Antrian.findById(_id);
+        console.log(antrian)
+        // if (!antrian) {
+        //     return res.status(404).json({ message: 'Antrian not found' });
+        // }
+
+        // // Hapus antrian
+        // await antrian.remove();
+
+        // res.status(200).json({ message: 'Antrian deleted successfully' });
+    } catch (error) {
+        // Tanggapi dengan kesalahan yang disematkan
+        res.status(500).json({ message: 'Failure', error: error.message });
+    }
+};
+
+module.exports = {
     getAntrian,
     getDetail,
     createAntrian,
-    updateAntrian
-}
+    updateAntrian,
+    deleteAntrian
+};
